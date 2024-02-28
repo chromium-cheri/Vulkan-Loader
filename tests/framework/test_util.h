@@ -821,7 +821,7 @@ inline std::string test_platform_executable_path() {
     if (sysctl(mib, sizeof(mib) / sizeof(mib[0]), &buffer[0], &size, NULL, 0) < 0) {
         return NULL;
     }
-    buffer.resize(size);
+    buffer.resize(size - 1);
 
     return buffer;
 }
