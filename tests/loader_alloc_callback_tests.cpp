@@ -72,7 +72,11 @@ class MemoryTracker {
         if (!detail.allocation) {
             abort();
         };
+#if defined(__CHERI_PURE_CAPABILITY__)
+        uintptr_t addr = (uintptr_t)detail.allocation.get();
+#else // defined(__CHERI_PURE_CAPABILITY__)
         uint64_t addr = (uint64_t)detail.allocation.get();
+#endif // defined(__CHERI_PURE_CAPABILITY__)
         addr += (alignment - 1);
         addr &= ~(alignment - 1);
         void* aligned_alloc = (void*)addr;
