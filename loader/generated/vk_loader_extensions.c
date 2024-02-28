@@ -3994,7 +3994,7 @@ VKAPI_ATTR VkResult VKAPI_CALL DebugMarkerSetObjectTagEXT(
     // If this is a physical device, we have to replace it with the proper one for the next call.
     if (pTagInfo->objectType == VK_DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT) {
         struct loader_physical_device_tramp *phys_dev_tramp = (struct loader_physical_device_tramp *)(uintptr_t)pTagInfo->object;
-        local_tag_info.object = (uint64_t)(uintptr_t)phys_dev_tramp->phys_dev;
+        local_tag_info.object = (uintptr_t)phys_dev_tramp->phys_dev;
     }
     return disp->DebugMarkerSetObjectTagEXT(device, &local_tag_info);
 }
@@ -4014,18 +4014,18 @@ VKAPI_ATTR VkResult VKAPI_CALL terminator_DebugMarkerSetObjectTagEXT(
     // If this is a physical device, we have to replace it with the proper one for the next call.
     if (pTagInfo->objectType == VK_DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT) {
         struct loader_physical_device_term *phys_dev_term = (struct loader_physical_device_term *)(uintptr_t)pTagInfo->object;
-        local_tag_info.object = (uint64_t)(uintptr_t)phys_dev_term->phys_dev;
+        local_tag_info.object = (uintptr_t)phys_dev_term->phys_dev;
     // If this is a KHR_surface, and the ICD has created its own, we have to replace it with the proper one for the next call.
     } else if (pTagInfo->objectType == VK_DEBUG_REPORT_OBJECT_TYPE_SURFACE_KHR_EXT) {
         if (NULL != dev && NULL != dev->loader_dispatch.core_dispatch.CreateSwapchainKHR) {
             VkIcdSurface *icd_surface = (VkIcdSurface *)(uintptr_t)pTagInfo->object;
             if (NULL != icd_surface->real_icd_surfaces) {
-                local_tag_info.object = (uint64_t)icd_surface->real_icd_surfaces[icd_index];
+                local_tag_info.object = (uintptr_t)icd_surface->real_icd_surfaces[icd_index];
             }
         }
     // If this is an instance we have to replace it with the proper one for the next call.
     } else if (pTagInfo->objectType == VK_DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT) {
-        local_tag_info.object = (uint64_t)(uintptr_t)icd_term->instance;
+        local_tag_info.object = (uintptr_t)icd_term->instance;
     }
     // Exit early if the driver does not support the function - this can happen as a layer or the loader itself supports
     // debug utils but the driver does not.
@@ -4049,7 +4049,7 @@ VKAPI_ATTR VkResult VKAPI_CALL DebugMarkerSetObjectNameEXT(
     // If this is a physical device, we have to replace it with the proper one for the next call.
     if (pNameInfo->objectType == VK_DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT) {
         struct loader_physical_device_tramp *phys_dev_tramp = (struct loader_physical_device_tramp *)(uintptr_t)pNameInfo->object;
-        local_name_info.object = (uint64_t)(uintptr_t)phys_dev_tramp->phys_dev;
+        local_name_info.object = (uintptr_t)phys_dev_tramp->phys_dev;
     }
     return disp->DebugMarkerSetObjectNameEXT(device, &local_name_info);
 }
@@ -4069,18 +4069,18 @@ VKAPI_ATTR VkResult VKAPI_CALL terminator_DebugMarkerSetObjectNameEXT(
     // If this is a physical device, we have to replace it with the proper one for the next call.
     if (pNameInfo->objectType == VK_DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT) {
         struct loader_physical_device_term *phys_dev_term = (struct loader_physical_device_term *)(uintptr_t)pNameInfo->object;
-        local_name_info.object = (uint64_t)(uintptr_t)phys_dev_term->phys_dev;
+        local_name_info.object = (uintptr_t)phys_dev_term->phys_dev;
     // If this is a KHR_surface, and the ICD has created its own, we have to replace it with the proper one for the next call.
     } else if (pNameInfo->objectType == VK_DEBUG_REPORT_OBJECT_TYPE_SURFACE_KHR_EXT) {
         if (NULL != dev && NULL != dev->loader_dispatch.core_dispatch.CreateSwapchainKHR) {
             VkIcdSurface *icd_surface = (VkIcdSurface *)(uintptr_t)pNameInfo->object;
             if (NULL != icd_surface->real_icd_surfaces) {
-                local_name_info.object = (uint64_t)icd_surface->real_icd_surfaces[icd_index];
+                local_name_info.object = (uintptr_t)icd_surface->real_icd_surfaces[icd_index];
             }
         }
     // If this is an instance we have to replace it with the proper one for the next call.
     } else if (pNameInfo->objectType == VK_DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT) {
-        local_name_info.object = (uint64_t)(uintptr_t)icd_term->instance;
+        local_name_info.object = (uintptr_t)icd_term->instance;
     }
     // Exit early if the driver does not support the function - this can happen as a layer or the loader itself supports
     // debug utils but the driver does not.
@@ -4632,7 +4632,7 @@ VKAPI_ATTR VkResult VKAPI_CALL SetDebugUtilsObjectNameEXT(
     // If this is a physical device, we have to replace it with the proper one for the next call.
     if (pNameInfo->objectType == VK_OBJECT_TYPE_PHYSICAL_DEVICE) {
         struct loader_physical_device_tramp *phys_dev_tramp = (struct loader_physical_device_tramp *)(uintptr_t)pNameInfo->objectHandle;
-        local_name_info.objectHandle = (uint64_t)(uintptr_t)phys_dev_tramp->phys_dev;
+        local_name_info.objectHandle = (uintptr_t)phys_dev_tramp->phys_dev;
     }
     if (disp->SetDebugUtilsObjectNameEXT != NULL) {
         return disp->SetDebugUtilsObjectNameEXT(device, &local_name_info);
@@ -4656,18 +4656,18 @@ VKAPI_ATTR VkResult VKAPI_CALL terminator_SetDebugUtilsObjectNameEXT(
     // If this is a physical device, we have to replace it with the proper one for the next call.
     if (pNameInfo->objectType == VK_OBJECT_TYPE_PHYSICAL_DEVICE) {
         struct loader_physical_device_term *phys_dev_term = (struct loader_physical_device_term *)(uintptr_t)pNameInfo->objectHandle;
-        local_name_info.objectHandle = (uint64_t)(uintptr_t)phys_dev_term->phys_dev;
+        local_name_info.objectHandle = (uintptr_t)phys_dev_term->phys_dev;
     // If this is a KHR_surface, and the ICD has created its own, we have to replace it with the proper one for the next call.
     } else if (pNameInfo->objectType == VK_OBJECT_TYPE_SURFACE_KHR) {
         if (NULL != dev && NULL != dev->loader_dispatch.core_dispatch.CreateSwapchainKHR) {
             VkIcdSurface *icd_surface = (VkIcdSurface *)(uintptr_t)pNameInfo->objectHandle;
             if (NULL != icd_surface->real_icd_surfaces) {
-                local_name_info.objectHandle = (uint64_t)icd_surface->real_icd_surfaces[icd_index];
+                local_name_info.objectHandle = (uintptr_t)icd_surface->real_icd_surfaces[icd_index];
             }
         }
     // If this is an instance we have to replace it with the proper one for the next call.
     } else if (pNameInfo->objectType == VK_OBJECT_TYPE_INSTANCE) {
-        local_name_info.objectHandle = (uint64_t)(uintptr_t)icd_term->instance;
+        local_name_info.objectHandle = (uintptr_t)icd_term->instance;
     }
     // Exit early if the driver does not support the function - this can happen as a layer or the loader itself supports
     // debug utils but the driver does not.
@@ -4691,7 +4691,7 @@ VKAPI_ATTR VkResult VKAPI_CALL SetDebugUtilsObjectTagEXT(
     // If this is a physical device, we have to replace it with the proper one for the next call.
     if (pTagInfo->objectType == VK_OBJECT_TYPE_PHYSICAL_DEVICE) {
         struct loader_physical_device_tramp *phys_dev_tramp = (struct loader_physical_device_tramp *)(uintptr_t)pTagInfo->objectHandle;
-        local_tag_info.objectHandle = (uint64_t)(uintptr_t)phys_dev_tramp->phys_dev;
+        local_tag_info.objectHandle = (uintptr_t)phys_dev_tramp->phys_dev;
     }
     if (disp->SetDebugUtilsObjectTagEXT != NULL) {
         return disp->SetDebugUtilsObjectTagEXT(device, &local_tag_info);
@@ -4715,18 +4715,18 @@ VKAPI_ATTR VkResult VKAPI_CALL terminator_SetDebugUtilsObjectTagEXT(
     // If this is a physical device, we have to replace it with the proper one for the next call.
     if (pTagInfo->objectType == VK_OBJECT_TYPE_PHYSICAL_DEVICE) {
         struct loader_physical_device_term *phys_dev_term = (struct loader_physical_device_term *)(uintptr_t)pTagInfo->objectHandle;
-        local_tag_info.objectHandle = (uint64_t)(uintptr_t)phys_dev_term->phys_dev;
+        local_tag_info.objectHandle = (uintptr_t)phys_dev_term->phys_dev;
     // If this is a KHR_surface, and the ICD has created its own, we have to replace it with the proper one for the next call.
     } else if (pTagInfo->objectType == VK_OBJECT_TYPE_SURFACE_KHR) {
         if (NULL != dev && NULL != dev->loader_dispatch.core_dispatch.CreateSwapchainKHR) {
             VkIcdSurface *icd_surface = (VkIcdSurface *)(uintptr_t)pTagInfo->objectHandle;
             if (NULL != icd_surface->real_icd_surfaces) {
-                local_tag_info.objectHandle = (uint64_t)icd_surface->real_icd_surfaces[icd_index];
+                local_tag_info.objectHandle = (uintptr_t)icd_surface->real_icd_surfaces[icd_index];
             }
         }
     // If this is an instance we have to replace it with the proper one for the next call.
     } else if (pTagInfo->objectType == VK_OBJECT_TYPE_INSTANCE) {
-        local_tag_info.objectHandle = (uint64_t)(uintptr_t)icd_term->instance;
+        local_tag_info.objectHandle = (uintptr_t)icd_term->instance;
     }
     // Exit early if the driver does not support the function - this can happen as a layer or the loader itself supports
     // debug utils but the driver does not.

@@ -1,4 +1,4 @@
-#!/usr/bin/python3 -i
+#!/usr/bin/env python3 -i
 #
 # Copyright (c) 2015-2022 The Khronos Group Inc.
 # Copyright (c) 2015-2022 Valve Corporation
@@ -1086,7 +1086,7 @@ class LoaderExtensionOutputGenerator(OutputGenerator):
                     funcs += '    // If this is a physical device, we have to replace it with the proper one for the next call.\n'
                     funcs += '    if (pNameInfo->objectType == VK_DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT) {\n'
                     funcs += '        struct loader_physical_device_tramp *phys_dev_tramp = (struct loader_physical_device_tramp *)(uintptr_t)pNameInfo->object;\n'
-                    funcs += '        local_name_info.object = (uint64_t)(uintptr_t)phys_dev_tramp->phys_dev;\n'
+                    funcs += '        local_name_info.object = (uintptr_t)phys_dev_tramp->phys_dev;\n'
                     funcs += '    }\n'
                 elif 'DebugMarkerSetObjectTag' in ext_cmd.name:
                     funcs += '    VkDebugMarkerObjectTagInfoEXT local_tag_info;\n'
@@ -1094,7 +1094,7 @@ class LoaderExtensionOutputGenerator(OutputGenerator):
                     funcs += '    // If this is a physical device, we have to replace it with the proper one for the next call.\n'
                     funcs += '    if (pTagInfo->objectType == VK_DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT) {\n'
                     funcs += '        struct loader_physical_device_tramp *phys_dev_tramp = (struct loader_physical_device_tramp *)(uintptr_t)pTagInfo->object;\n'
-                    funcs += '        local_tag_info.object = (uint64_t)(uintptr_t)phys_dev_tramp->phys_dev;\n'
+                    funcs += '        local_tag_info.object = (uintptr_t)phys_dev_tramp->phys_dev;\n'
                     funcs += '    }\n'
                 elif 'SetDebugUtilsObjectName' in ext_cmd.name:
                     funcs += '    VkDebugUtilsObjectNameInfoEXT local_name_info;\n'
@@ -1102,7 +1102,7 @@ class LoaderExtensionOutputGenerator(OutputGenerator):
                     funcs += '    // If this is a physical device, we have to replace it with the proper one for the next call.\n'
                     funcs += '    if (pNameInfo->objectType == VK_OBJECT_TYPE_PHYSICAL_DEVICE) {\n'
                     funcs += '        struct loader_physical_device_tramp *phys_dev_tramp = (struct loader_physical_device_tramp *)(uintptr_t)pNameInfo->objectHandle;\n'
-                    funcs += '        local_name_info.objectHandle = (uint64_t)(uintptr_t)phys_dev_tramp->phys_dev;\n'
+                    funcs += '        local_name_info.objectHandle = (uintptr_t)phys_dev_tramp->phys_dev;\n'
                     funcs += '    }\n'
                 elif 'SetDebugUtilsObjectTag' in ext_cmd.name:
                     funcs += '    VkDebugUtilsObjectTagInfoEXT local_tag_info;\n'
@@ -1110,7 +1110,7 @@ class LoaderExtensionOutputGenerator(OutputGenerator):
                     funcs += '    // If this is a physical device, we have to replace it with the proper one for the next call.\n'
                     funcs += '    if (pTagInfo->objectType == VK_OBJECT_TYPE_PHYSICAL_DEVICE) {\n'
                     funcs += '        struct loader_physical_device_tramp *phys_dev_tramp = (struct loader_physical_device_tramp *)(uintptr_t)pTagInfo->objectHandle;\n'
-                    funcs += '        local_tag_info.objectHandle = (uint64_t)(uintptr_t)phys_dev_tramp->phys_dev;\n'
+                    funcs += '        local_tag_info.objectHandle = (uintptr_t)phys_dev_tramp->phys_dev;\n'
                     funcs += '    }\n'
 
                 if ext_cmd.ext_name in NULL_CHECK_EXT_NAMES:
@@ -1247,18 +1247,18 @@ class LoaderExtensionOutputGenerator(OutputGenerator):
                         funcs += '    // If this is a physical device, we have to replace it with the proper one for the next call.\n'
                         funcs += f'    if ({debug_struct_name}->objectType == {phys_dev_check}) {{\n'
                         funcs += f'        struct loader_physical_device_term *phys_dev_term = (struct loader_physical_device_term *)(uintptr_t){debug_struct_name}->{member_name};\n'
-                        funcs += f'        {local_struct}.{member_name} = (uint64_t)(uintptr_t)phys_dev_term->phys_dev;\n'
+                        funcs += f'        {local_struct}.{member_name} = (uintptr_t)phys_dev_term->phys_dev;\n'
                         funcs += '    // If this is a KHR_surface, and the ICD has created its own, we have to replace it with the proper one for the next call.\n'
                         funcs += f'    }} else if ({debug_struct_name}->objectType == {surf_check}) {{\n'
                         funcs += '        if (NULL != dev && NULL != dev->loader_dispatch.core_dispatch.CreateSwapchainKHR) {\n'
                         funcs += f'            VkIcdSurface *icd_surface = (VkIcdSurface *)(uintptr_t){debug_struct_name}->{member_name};\n'
                         funcs += '            if (NULL != icd_surface->real_icd_surfaces) {\n'
-                        funcs += f'                {local_struct}.{member_name} = (uint64_t)icd_surface->real_icd_surfaces[icd_index];\n'
+                        funcs += f'                {local_struct}.{member_name} = (uintptr_t)icd_surface->real_icd_surfaces[icd_index];\n'
                         funcs += '            }\n'
                         funcs += '        }\n'
                         funcs += '    // If this is an instance we have to replace it with the proper one for the next call.\n'
                         funcs += f'    }} else if ({debug_struct_name}->objectType == {inst_check}) {{\n'
-                        funcs += f'        {local_struct}.{member_name} = (uint64_t)(uintptr_t)icd_term->instance;\n'
+                        funcs += f'        {local_struct}.{member_name} = (uintptr_t)(uintptr_t)icd_term->instance;\n'
                         funcs += '    }\n'
                         funcs += '    // Exit early if the driver does not support the function - this can happen as a layer or the loader itself supports\n'
                         funcs += '    // debug utils but the driver does not.\n'

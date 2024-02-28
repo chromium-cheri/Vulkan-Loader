@@ -3245,13 +3245,21 @@ LOADER_EXPORT VKAPI_ATTR void VKAPI_CALL vkGetDeviceImageSparseMemoryRequirement
     disp->GetDeviceImageSparseMemoryRequirements(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
 }
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+LOADER_EXPORT VKAPI_ATTR void VKAPI_CALL vkGetPrivateData(VkDevice device, VkObjectType objectType, uintptr_t objectHandle,
+#else // defined(__CHERI_PURE_CAPABILITY__)
 LOADER_EXPORT VKAPI_ATTR void VKAPI_CALL vkGetPrivateData(VkDevice device, VkObjectType objectType, uint64_t objectHandle,
+#endif // defined(__CHERI_PURE_CAPABILITY__)
                                                           VkPrivateDataSlot privateDataSlot, uint64_t *pData) {
     const VkLayerDispatchTable *disp = loader_get_dispatch(device);
     disp->GetPrivateData(device, objectType, objectHandle, privateDataSlot, pData);
 }
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+LOADER_EXPORT VKAPI_ATTR VkResult VKAPI_CALL vkSetPrivateData(VkDevice device, VkObjectType objectType, uintptr_t objectHandle,
+#else // defined(__CHERI_PURE_CAPABILITY__)
 LOADER_EXPORT VKAPI_ATTR VkResult VKAPI_CALL vkSetPrivateData(VkDevice device, VkObjectType objectType, uint64_t objectHandle,
+#endif // defined(__CHERI_PURE_CAPABILITY__)
                                                               VkPrivateDataSlot privateDataSlot, uint64_t data) {
     const VkLayerDispatchTable *disp = loader_get_dispatch(device);
     return disp->SetPrivateData(device, objectType, objectHandle, privateDataSlot, data);

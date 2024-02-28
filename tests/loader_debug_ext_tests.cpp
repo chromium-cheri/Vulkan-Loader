@@ -453,7 +453,11 @@ class DebugUtilTest : public ::testing::Test {
     std::string expected_message;
     VkObjectType expected_object_type;
     bool check_object_handle;
+#if defined(__CHERI_PURE_CAPABILITY__)
+    uintptr_t expected_object_handle;
+#else // defined(__CHERI_PURE_CAPABILITY__)
     uint64_t expected_object_handle;
+#endif // defined(__CHERI_PURE_CAPABILITY__)
     VkDebugUtilsMessageTypeFlagsEXT expected_message_flags;
     VkDebugUtilsMessageSeverityFlagsEXT expected_severity_flags;
     bool message_found;
@@ -754,7 +758,11 @@ TEST_F(ManualMessage, InfoMessageIgnoredSeverity) {
 
     VkDebugUtilsObjectNameInfoEXT object{VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT};
     object.objectType = VK_OBJECT_TYPE_INSTANCE;
+#if defined(__CHERI_PURE_CAPABILITY__)
+    object.objectHandle = (uintptr_t)inst;
+#else // defined(__CHERI_PURE_CAPABILITY__)
     object.objectHandle = (uint64_t)inst;
+#endif // defined(__CHERI_PURE_CAPABILITY__)
     VkDebugUtilsMessengerCallbackDataEXT message_data{VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT};
     message_data.pMessage = my_message;
     message_data.objectCount = 1;
@@ -794,7 +802,11 @@ TEST_F(ManualMessage, InfoMessageIgnoredObject) {
 
     VkDebugUtilsObjectNameInfoEXT object{VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT};
     object.objectType = VK_OBJECT_TYPE_COMMAND_POOL;
+#if defined(__CHERI_PURE_CAPABILITY__)
+    object.objectHandle = (uintptr_t)inst;
+#else // defined(__CHERI_PURE_CAPABILITY__)
     object.objectHandle = (uint64_t)inst;
+#endif // defined(__CHERI_PURE_CAPABILITY__)
     VkDebugUtilsMessengerCallbackDataEXT message_data{VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT};
     message_data.pMessage = my_message;
     message_data.objectCount = 1;
@@ -834,7 +846,11 @@ TEST_F(ManualMessage, InfoMessage) {
 
     VkDebugUtilsObjectNameInfoEXT object{VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT};
     object.objectType = VK_OBJECT_TYPE_INSTANCE;
+#if defined(__CHERI_PURE_CAPABILITY__)
+    object.objectHandle = (uintptr_t)inst;
+#else // defined(__CHERI_PURE_CAPABILITY__)
     object.objectHandle = (uint64_t)inst;
+#endif // defined(__CHERI_PURE_CAPABILITY__)
     VkDebugUtilsMessengerCallbackDataEXT message_data{VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT};
     message_data.pMessage = my_message;
     message_data.objectCount = 1;
@@ -946,36 +962,64 @@ void CheckDeviceFunctions(FrameworkEnvironment& env, bool use_GIPA, bool enable_
     if (SetDebugUtilsObjectNameEXT) {
         VkDebugUtilsObjectNameInfoEXT obj_name_info{};
         obj_name_info.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT;
+#if defined(__CHERI_PURE_CAPABILITY__)
+        obj_name_info.objectHandle = (uintptr_t)swapchain;
+#else // defined(__CHERI_PURE_CAPABILITY__)
         obj_name_info.objectHandle = (uint64_t)swapchain;
+#endif // defined(__CHERI_PURE_CAPABILITY__)
         obj_name_info.objectType = VK_OBJECT_TYPE_SWAPCHAIN_KHR;
         obj_name_info.pObjectName = " Your mom!";
         ASSERT_EQ(VK_SUCCESS, SetDebugUtilsObjectNameEXT(dev.dev, &obj_name_info));
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+        obj_name_info.objectHandle = (uintptr_t)surface;
+#else // defined(__CHERI_PURE_CAPABILITY__)
         obj_name_info.objectHandle = (uint64_t)(uintptr_t)surface;
+#endif // defined(__CHERI_PURE_CAPABILITY__)
         obj_name_info.objectType = VK_OBJECT_TYPE_SURFACE_KHR;
         obj_name_info.pObjectName = " Your moms surface!";
         ASSERT_EQ(VK_SUCCESS, SetDebugUtilsObjectNameEXT(dev.dev, &obj_name_info));
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+        obj_name_info.objectHandle = (uintptr_t)phys_dev;
+#else // defined(__CHERI_PURE_CAPABILITY__)
         obj_name_info.objectHandle = (uint64_t)(uintptr_t)phys_dev;
+#endif // defined(__CHERI_PURE_CAPABILITY__)
         obj_name_info.objectType = VK_OBJECT_TYPE_PHYSICAL_DEVICE;
         obj_name_info.pObjectName = "Physical Device AAAAAAAAA";
         ASSERT_EQ(VK_SUCCESS, SetDebugUtilsObjectNameEXT(dev.dev, &obj_name_info));
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+        obj_name_info.objectHandle = (uintptr_t)inst.inst;
+#else // defined(__CHERI_PURE_CAPABILITY__)
         obj_name_info.objectHandle = (uint64_t)(uintptr_t)inst.inst;
+#endif // defined(__CHERI_PURE_CAPABILITY__)
         obj_name_info.objectType = VK_OBJECT_TYPE_INSTANCE;
         ASSERT_EQ(VK_SUCCESS, SetDebugUtilsObjectNameEXT(dev.dev, &obj_name_info));
     }
     if (SetDebugUtilsObjectTagEXT) {
         VkDebugUtilsObjectTagInfoEXT utils_object_tag{};
+#if defined(__CHERI_PURE_CAPABILITY__)
+        utils_object_tag.objectHandle = (uintptr_t)inst.inst;
+#else // defined(__CHERI_PURE_CAPABILITY__)
         utils_object_tag.objectHandle = (uint64_t)(uintptr_t)inst.inst;
+#endif // defined(__CHERI_PURE_CAPABILITY__)
         utils_object_tag.objectType = VK_OBJECT_TYPE_INSTANCE;
         ASSERT_EQ(VK_SUCCESS, SetDebugUtilsObjectTagEXT(dev.dev, &utils_object_tag));
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+        utils_object_tag.objectHandle = (uintptr_t)phys_dev;
+#else // defined(__CHERI_PURE_CAPABILITY__)
         utils_object_tag.objectHandle = (uint64_t)(uintptr_t)phys_dev;
+#endif // defined(__CHERI_PURE_CAPABILITY__)
         utils_object_tag.objectType = VK_OBJECT_TYPE_PHYSICAL_DEVICE;
         ASSERT_EQ(VK_SUCCESS, SetDebugUtilsObjectTagEXT(dev.dev, &utils_object_tag));
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+        utils_object_tag.objectHandle = (uintptr_t)surface;
+#else // defined(__CHERI_PURE_CAPABILITY__)
         utils_object_tag.objectHandle = (uint64_t)surface;
+#endif // defined(__CHERI_PURE_CAPABILITY__)
         utils_object_tag.objectType = VK_OBJECT_TYPE_SURFACE_KHR;
         ASSERT_EQ(VK_SUCCESS, SetDebugUtilsObjectTagEXT(dev.dev, &utils_object_tag));
     }
@@ -987,36 +1031,68 @@ void CheckDeviceFunctions(FrameworkEnvironment& env, bool use_GIPA, bool enable_
         ASSERT_DEATH(DebugMarkerSetObjectNameEXT(dev.dev, &marker_object_name), "");
     } else {
         if (DebugMarkerSetObjectTagEXT) {
+#if defined(__CHERI_PURE_CAPABILITY__)
+            marker_object_tag.object = (uintptr_t)swapchain;
+#else // defined(__CHERI_PURE_CAPABILITY__)
             marker_object_tag.object = (uint64_t)(uintptr_t)swapchain;
+#endif // defined(__CHERI_PURE_CAPABILITY__)
             marker_object_tag.objectType = VK_DEBUG_REPORT_OBJECT_TYPE_SWAPCHAIN_KHR_EXT;
             ASSERT_EQ(VK_SUCCESS, DebugMarkerSetObjectTagEXT(dev.dev, &marker_object_tag));
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+            marker_object_tag.object = (uintptr_t)phys_dev;
+#else // defined(__CHERI_PURE_CAPABILITY__)
             marker_object_tag.object = (uint64_t)(uintptr_t)phys_dev;
+#endif // defined(__CHERI_PURE_CAPABILITY__)
             marker_object_tag.objectType = VK_DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT;
             ASSERT_EQ(VK_SUCCESS, DebugMarkerSetObjectTagEXT(dev.dev, &marker_object_tag));
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+            marker_object_tag.object = (uintptr_t)surface;
+#else // defined(__CHERI_PURE_CAPABILITY__)
             marker_object_tag.object = (uint64_t)surface;
+#endif // defined(__CHERI_PURE_CAPABILITY__)
             marker_object_tag.objectType = VK_DEBUG_REPORT_OBJECT_TYPE_SURFACE_KHR_EXT;
             ASSERT_EQ(VK_SUCCESS, DebugMarkerSetObjectTagEXT(dev.dev, &marker_object_tag));
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+            marker_object_tag.object = (uintptr_t)inst.inst;
+#else // defined(__CHERI_PURE_CAPABILITY__)
             marker_object_tag.object = (uint64_t)(uintptr_t)inst.inst;
+#endif // defined(__CHERI_PURE_CAPABILITY__)
             marker_object_tag.objectType = VK_DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT;
             ASSERT_EQ(VK_SUCCESS, DebugMarkerSetObjectTagEXT(dev.dev, &marker_object_tag));
         }
         if (DebugMarkerSetObjectNameEXT) {
+#if defined(__CHERI_PURE_CAPABILITY__)
+            marker_object_name.object = (uintptr_t)swapchain;
+#else // defined(__CHERI_PURE_CAPABILITY__)
             marker_object_name.object = (uint64_t)(uintptr_t)swapchain;
+#endif // defined(__CHERI_PURE_CAPABILITY__)
             marker_object_name.objectType = VK_DEBUG_REPORT_OBJECT_TYPE_SWAPCHAIN_KHR_EXT;
             ASSERT_EQ(VK_SUCCESS, DebugMarkerSetObjectNameEXT(dev.dev, &marker_object_name));
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+            marker_object_name.object = (uintptr_t)phys_dev;
+#else // defined(__CHERI_PURE_CAPABILITY__)
             marker_object_name.object = (uint64_t)(uintptr_t)phys_dev;
+#endif // defined(__CHERI_PURE_CAPABILITY__)
             marker_object_name.objectType = VK_DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT;
             ASSERT_EQ(VK_SUCCESS, DebugMarkerSetObjectNameEXT(dev.dev, &marker_object_name));
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+            marker_object_name.object = (uintptr_t)surface;
+#else // defined(__CHERI_PURE_CAPABILITY__)
             marker_object_name.object = (uint64_t)surface;
+#endif // defined(__CHERI_PURE_CAPABILITY__)
             marker_object_name.objectType = VK_DEBUG_REPORT_OBJECT_TYPE_SURFACE_KHR_EXT;
             ASSERT_EQ(VK_SUCCESS, DebugMarkerSetObjectNameEXT(dev.dev, &marker_object_name));
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+            marker_object_name.object = (uintptr_t)inst.inst;
+#else // defined(__CHERI_PURE_CAPABILITY__)
             marker_object_name.object = (uint64_t)(uintptr_t)inst.inst;
+#endif // defined(__CHERI_PURE_CAPABILITY__)
             marker_object_name.objectType = VK_DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT;
             ASSERT_EQ(VK_SUCCESS, DebugMarkerSetObjectNameEXT(dev.dev, &marker_object_name));
         }

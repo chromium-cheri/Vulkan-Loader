@@ -2,11 +2,11 @@
     "repos": [
         {
             "name": "Vulkan-Headers",
-            "url": "https://github.com/KhronosGroup/Vulkan-Headers.git",
+            "url": "https://github.com/chromium-cheri/Vulkan-Headers.git",
             "sub_dir": "Vulkan-Headers",
             "build_dir": "Vulkan-Headers/build",
             "install_dir": "Vulkan-Headers/build/install",
-            "commit": "v1.3.250"
+            "commit": "cf7b74a1a85dccb4240eaca91e26b5fb20b7b4c7"
         },
         {
             "name": "googletest",
