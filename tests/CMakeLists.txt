@@ -15,6 +15,7 @@
 # limitations under the License.
 # ~~~
 
+add_compile_options(-Wno-cheri-capability-misuse)
 
 option(ENABLE_LIVE_VERIFICATION_TESTS "Enable tests which expect to run on live drivers. Meant for manual verification only" OFF)
 
