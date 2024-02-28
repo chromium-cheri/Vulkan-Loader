@@ -66,6 +66,8 @@ if (WIN32)
     endif()
 endif()
 
+add_compile_options(-Wno-cheri-capability-misuse)
+
 option(ENABLE_LIVE_VERIFICATION_TESTS "Enable tests which expect to run on live drivers. Meant for manual verification only" OFF)
 
 set(TEST_EXECUTION_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/executing_tests")
