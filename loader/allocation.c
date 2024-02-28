@@ -26,6 +26,9 @@
 
 #include "allocation.h"
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+#include <stdalign.h>
+#endif // defined(__CHERI_PURE_CAPABILITY__)
 #include <stdlib.h>
 
 // A debug option to disable allocators at compile time to investigate future issues.
@@ -39,7 +42,11 @@ void *loader_alloc(const VkAllocationCallbacks *pAllocator, size_t size, VkSyste
     if (pAllocator && pAllocator->pfnAllocation) {
         // These are internal structures, so it's best to align everything to
         // the largest unit size which is the size of a uint64_t.
+#if defined(__CHERI_PURE_CAPABILITY__)
+        pMemory = pAllocator->pfnAllocation(pAllocator->pUserData, size, alignof(max_align_t), allocation_scope);
+#else // defined(__CHERI_PURE_CAPABILITY__)
         pMemory = pAllocator->pfnAllocation(pAllocator->pUserData, size, sizeof(uint64_t), allocation_scope);
+#endif // defined(__CHERI_PURE_CAPABILITY__)
     } else {
 #endif
         pMemory = malloc(size);
@@ -56,7 +63,11 @@ void *loader_calloc(const VkAllocationCallbacks *pAllocator, size_t size, VkSyst
     if (pAllocator && pAllocator->pfnAllocation) {
         // These are internal structures, so it's best to align everything to
         // the largest unit size which is the size of a uint64_t.
+#if defined(__CHERI_PURE_CAPABILITY__)
+        pMemory = pAllocator->pfnAllocation(pAllocator->pUserData, size, alignof(max_align_t), allocation_scope);
+#else // defined(__CHERI_PURE_CAPABILITY__)
         pMemory = pAllocator->pfnAllocation(pAllocator->pUserData, size, sizeof(uint64_t), allocation_scope);
+#endif // defined(__CHERI_PURE_CAPABILITY__)
         if (pMemory) {
             memset(pMemory, 0, size);
         }
