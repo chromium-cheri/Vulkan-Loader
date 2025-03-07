@@ -150,7 +150,7 @@ if (!is_android) {
         output_name = "vulkan"
 
         # Create libvulkan.so.1 on Linux instead of libvulkan.so
-        if ((is_linux || is_chromeos) && vulkan_loader_shared) {
+        if ((is_linux || is_chromeos) && !is_bsd && vulkan_loader_shared) {
           output_extension = "so.1"
         }
       }
